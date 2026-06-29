@@ -50,4 +50,16 @@ function codeExiste($code):bool{
 }
 
 
+function validerMontant($montant): bool{
+    if (!is_numeric($montant)) {
+        return false;
+    }
+
+    if ($montant <= 0) {
+        return false;
+    }
+
+    return true;
+}
+
 ?>
