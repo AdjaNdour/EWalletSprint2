@@ -7,7 +7,6 @@ function afficherMenu(): void {
     echo "2 - Faire Dépôt\n";
     echo "3 - Faire Retrait\n";
     echo "4 - Lister les Transactions\n";
-    echo "5 - Lister les wallets\n";
     echo "0 - Quitter\n";
 }
 function validite($min,$max){
@@ -25,7 +24,7 @@ $choix = -1;
 do {
 
     afficherMenu();
-    $choix = validite(0,5);
+    $choix = validite(0,4);
     controller($choix);
 
 } while ($choix != 0);
