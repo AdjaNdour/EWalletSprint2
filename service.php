@@ -50,5 +50,45 @@ function creerWalletService($newWallet){
     ajouterWallet($newWallet);
 }
 
+function creerDepotService(array $wallets,array $newTrans):?array {
+  
+    do {
+        $index = rechercheWalletParTelephone($wallets, $newTrans['telephone']);
+        if ($index == -1) {
+            echo "numero non existant veiller ressaire \n";
+            $newTrans['telephone']= readline("ressaisir le telephone : ");; 
+        }
+    } while ($index == -1); 
+
+    do {
+        if (!validerMontant($newTrans['montant'])) {
+            echo "montant invalide \n";
+            $newTrans['montant']= readline("ressaisir le montant : ");; 
+        }
+    } while (!validerMontant($newTrans['montant'])); 
+
+    $newTrans['indexClient']=$index;
+    return $newTrans;
+}
+
+
+function faireDepotService($newTrans){
+
+    global $wallets;
+    $newDepotAvecIndex = creerDepotService($wallets, $newTrans);
+
+    if ($newDepotAvecIndex == null) {
+        return;
+    }
+    $transaction = [
+        'montant' => $newDepotAvecIndex['montant'],
+        'indexClient' => $newDepotAvecIndex['indexClient'],
+        'frais' => 0
+    ];
+    gererSolde($wallets, $transaction['indexClient'],$transaction['montant'],true);
+
+    ajouterTransaction($transaction);
+}
+
 
 ?>
