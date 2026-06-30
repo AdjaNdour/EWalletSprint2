@@ -1,5 +1,16 @@
 <?php
 
+namespace Service;
+
+use function Validator\validerNumero;
+use function Validator\validerCode;
+use function Validator\validerMontant;
+
+use function Repository\ajouterWallet;
+use function Repository\ajouterTransaction;
+use function Repository\rechercheWalletParTelephone;
+use function Repository\gererSolde;
+
 require_once "validator.php";
 require_once "repository.php";
 

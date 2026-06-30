@@ -1,4 +1,9 @@
 <?php
+
+require_once "controller.php";
+
+use function Controller\controller;
+
 require_once "controller.php";
 
 function afficherMenu(): void {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Validator;
+
 require_once "repository.php";
 
 function validerNumero($numero):bool{
