@@ -15,7 +15,7 @@ function controller($choix){
             faireRetraitController();
             break;
         case 4:
-            echo "4";
+            listerTransactions();
             break;
         default:
             echo "Au revoir \n";
@@ -44,6 +44,10 @@ function faireDepotController(){
 }
 function faireRetraitController(){
     faireRetraitService(saisieTrans());
+}
+
+function listerTransactions():void{
+    afficherTransactionsService();
 }
 
 ?>

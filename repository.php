@@ -20,6 +20,14 @@ function ajouterTransaction($newTrans) : void {
     var_dump($transactions);
 }
 
+function afficherTransactions($wallets, $transactions):void{ 
+    foreach ($transactions as $index => $transaction) {
+        $indexClient = $transaction['indexClient'];
+        $client = $wallets[$indexClient];
+        echo "| Titulaire : {$client['client']}" ."| Montant : {$transaction['montant']}\n";
+    }
+}
+
 function rechercheWalletParTelephone(array $wallets,string $telephone):int{
     foreach ($wallets as $index => $wallet) {
         if ($wallet['telephone']==$telephone) {
