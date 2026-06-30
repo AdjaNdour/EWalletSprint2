@@ -1,4 +1,12 @@
 <?php
+
+namespace  Controller;
+
+use function  Service\creerWalletService;
+use function  Service\faireDepotService;
+use function  Service\faireRetraitService;
+use function  Service\afficherTransactionsService;
+
 require_once "service.php";
 
 function controller($choix){
