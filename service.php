@@ -136,6 +136,7 @@ function faireRetraitService($newTrans){
         }
 
     } while ($transaction['montant'] <= 0 || ($transaction['montant'] + calculerFrais($transaction['montant'])) > $wallets[$index]['solde']);
+    
     gererSolde($wallets, $transaction['indexClient'],$transaction['montant'],false);
     ajouterTransaction($transaction);
 }
