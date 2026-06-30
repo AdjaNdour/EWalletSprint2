@@ -5,8 +5,8 @@ $wallets=[
 ];
 
 $transactions=[
-    0=>['montant'=>1000,'indexClient'=>0],
-    1=>['montant'=>-5000,'indexClient'=>0]
+    0=>['montant'=>1000,'frais'=>0,'indexClient'=>0],
+    1=>['montant'=>-5000,'frais'=>200,'indexClient'=>0]
 ];
 
 function ajouterWallet($newWallet) : void {
@@ -20,21 +20,23 @@ function ajouterTransaction($newTrans) : void {
     var_dump($transactions);
 }
 
-function afficherTransactions($wallets, $transactions):void{ 
-    foreach ($transactions as $index => $transaction) {
-        $indexClient = $transaction['indexClient'];
-        $client = $wallets[$indexClient];
-        echo "| Titulaire : {$client['client']}" ."| Montant : {$transaction['montant']}\n";
-    }
+function getWallets(): array {
+    global $wallets;
+    return $wallets;
 }
 
+function afficherTransactions($wallets, $transactions): void{
+    array_map(function($transaction) use ($wallets) {
+        $client = $wallets[$transaction['indexClient']];
+        echo "| Titulaire : {$client['client']} | Montant : {$transaction['montant']} | Frais : {$transaction['frais']}\n";
+    }, $transactions);
+}
+
+
 function rechercheWalletParTelephone(array $wallets,string $telephone):int{
-    foreach ($wallets as $index => $wallet) {
-        if ($wallet['telephone']==$telephone) {
-            return $index;
-        }
-    }
-    return -1;
+    $telephones = array_column($wallets ,'telephone');
+    $index = array_search($telephone,$telephones);
+    return $index === false ? -1 : $index;
 }
 
 function gererSolde(array &$wallets, int $index, int $montant, bool $addition): void {
