@@ -12,7 +12,7 @@ function controller($choix){
             faireDepotController();
             break;
         case 3:
-            echo "3";
+            faireRetraitController();
             break;
         case 4:
             echo "4";
@@ -33,12 +33,17 @@ function creerWalletController(){
     creerWalletService($newWallet);
 }
 
-
-function faireDepotController(){
+function saisieTrans(){
     $trans=['montant'=>0,'indexClient'=>'','telephone'=>''];
     $trans['telephone'] = readline("Veuillez saisir le telephone:");
-    $trans['montant'] = (int) readline("Veuillez saisir le montant de la transaction:");
-    faireDepotService($trans);
+    $trans['montant'] = (int) readline("Veuillez saisir le montant de la transaction:"); 
+    return $trans;
+}
+function faireDepotController(){
+    faireDepotService(saisieTrans());
+}
+function faireRetraitController(){
+    faireRetraitService(saisieTrans());
 }
 
 ?>

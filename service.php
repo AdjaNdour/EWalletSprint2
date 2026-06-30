@@ -50,43 +50,82 @@ function creerWalletService($newWallet){
     ajouterWallet($newWallet);
 }
 
-function creerDepotService(array $wallets,array $newTrans):?array {
-  
+function creerTransactionService(array $wallets,array $newTrans):?array {
+
     do {
         $index = rechercheWalletParTelephone($wallets, $newTrans['telephone']);
+
         if ($index == -1) {
-            echo "numero non existant veiller ressaire \n";
-            $newTrans['telephone']= readline("ressaisir le telephone : ");; 
+            echo "numero non existant veuillez ressaisir \n";
+            $newTrans['telephone'] = readline("ressaisir le telephone : ");
         }
-    } while ($index == -1); 
+
+    } while ($index == -1);
 
     do {
         if (!validerMontant($newTrans['montant'])) {
             echo "montant invalide \n";
-            $newTrans['montant']= readline("ressaisir le montant : ");; 
+            $newTrans['montant'] = readline("ressaisir le montant : ");
         }
-    } while (!validerMontant($newTrans['montant'])); 
 
-    $newTrans['indexClient']=$index;
+    } while (!validerMontant($newTrans['montant']));
+
+    $newTrans['indexClient'] = $index;
     return $newTrans;
 }
 
-
-function faireDepotService($newTrans){
-
-    global $wallets;
-    $newDepotAvecIndex = creerDepotService($wallets, $newTrans);
-
-    if ($newDepotAvecIndex == null) {
-        return;
-    }
+function initTrans(array $wallets, array $newTrans):?array{
+    $newTransAvecIndex = creerTransactionService($wallets, $newTrans);
     $transaction = [
-        'montant' => $newDepotAvecIndex['montant'],
-        'indexClient' => $newDepotAvecIndex['indexClient'],
+        'montant' => $newTransAvecIndex['montant'],
+        'indexClient' => $newTransAvecIndex['indexClient'],
         'frais' => 0
     ];
-    gererSolde($wallets, $transaction['indexClient'],$transaction['montant'],true);
+    return $transaction;
+}
 
+function faireDepotService($newTrans){
+    global $wallets;
+    $transaction = initTrans($wallets, $newTrans);
+    gererSolde($wallets, $transaction['indexClient'],$transaction['montant'],true);
+    ajouterTransaction($transaction);
+}
+
+function calculerFrais($montant): int{
+
+    if($montant <= 10000){
+        return 200;
+    }
+    if($montant <= 100000){
+        return 500;
+    }
+    $frais = $montant * 0.01;
+    if($frais > 5000){
+        $frais = 5000;
+    }
+    return (int)$frais;
+}
+
+function faireRetraitService($newTrans){
+
+    global $wallets;
+    $transaction = initTrans($wallets, $newTrans);
+    $index = $transaction['indexClient'];
+    if ($wallets[$index]['solde'] == 0) {
+        echo "votre solde est nul, vous ne pouvez pas faire de retrait merci.\n";
+        return null;
+    }
+    do {
+        $frais = calculerFrais($transaction['montant']);
+        $total = $transaction['montant'] + $frais;
+        if ($transaction['montant'] <= 0 || $total > $wallets[$index]['solde']) {
+            echo "Montant invalide ou solde insuffisant.\n";
+            echo "Frais : ".$frais." CFA\n";
+            $transaction['montant'] = (int) readline("ressaisir le montant : ");
+        }
+
+    } while ($transaction['montant'] <= 0 || ($transaction['montant'] + calculerFrais($transaction['montant'])) > $wallets[$index]['solde']);
+    gererSolde($wallets, $transaction['indexClient'],$transaction['montant'],false);
     ajouterTransaction($transaction);
 }
 
