@@ -130,4 +130,9 @@ function faireRetraitService($newTrans){
 }
 
 
+function afficherTransactionsService():void{
+    global $wallets, $transactions;
+
+    afficherTransactions($wallets,$transactions);
+}
 ?>
